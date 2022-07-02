@@ -1,1 +1,1 @@
-This project is about C programming introduction
+ALX low level programming task.
