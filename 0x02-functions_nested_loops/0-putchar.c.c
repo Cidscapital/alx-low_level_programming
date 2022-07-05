@@ -1,4 +1,4 @@
-#include "holberton.h"
+#include "main.h"
 /**
  *main - entry
  *
@@ -7,8 +7,8 @@
  *Return: 0 (success)
  */
 int main(void)
-{
-	char c[9] = "Holberton";
+{                  
+	char c[9] = "Developer";
 	int i;
 
 	for (i = 0; i < 9; ++i)
