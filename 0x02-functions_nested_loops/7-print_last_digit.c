@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "holberton.h"
+#include "main.h"
 /**
  *print_last_digit - prints the last digits of a number
  *@n: the digit to print its last digit
