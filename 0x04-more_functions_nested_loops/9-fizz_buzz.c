@@ -1,33 +1,41 @@
+#include "main.h"
 #include <stdio.h>
+
 /**
- *main - program that prints the numbers from 1 to 100, but for multiples of
- *three prints Fizz, multiples of five prints Buzz, multiples of both prints
- *FizzBuzz
- *
- *Return: 0 (success)
- */
+  * main - Prints a Fizz Buzz program
+  *
+  * Return: Always 0 (Success)
+  */
 int main(void)
 {
-	int i;
+	int x;
 
-	for (i = 1; i <= 100; ++i)
+	for (x = 1; x <= 100; x++)
 	{
-		if (i % 3 == 0)
+		if ((x % 3 == 0) && (x % 5 == 0))
 		{
-			if (i % 5 == 0)
-				printf("FizzBuzz ");
-			else
-				printf("Fizz ");
+			printf("FizzBuzz");
 		}
-		else if (i % 5 == 0)
+		else if (x % 3 == 0)
 		{
-			if (i == 100)
-				printf("Buzz\n");
-			else
-				printf("Buzz ");
+			printf("Fizz");
 		}
-		else if (i != 100)
-			printf("%i ", i);
+		else if (x % 5 == 0)
+		{
+			printf("Buzz");
+		}
+		else
+		{
+			printf("%d", x);
+		}
+
+		if (x != 100)
+		{
+			printf(" ");
+		}
 	}
+
+	printf("\n");
+
 	return (0);
 }
