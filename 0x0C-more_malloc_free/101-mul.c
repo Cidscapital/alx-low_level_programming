@@ -1,126 +1,181 @@
-#include "main.h"
+#include "holberton.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <ctype.h>
-
 /**
- * _is_zero - determines if any number is zero
- * @argv: argument vector.
+ *check_digit - checks if a string contains only digit
+ *@s: pointer to string to check
  *
- * Return: no return.
+ *Return: 0 if there is at least a digit
+ *        1 if the strins only contains digits
  */
-void _is_zero(char *argv[])
+int check_digit(char *s)
 {
-	int i, isn1 = 1, isn2 = 1;
-
-	for (i = 0; argv[1][i]; i++)
-		if (argv[1][i] != '0')
-		{
-			isn1 = 0;
-			break;
-		}
-
-	for (i = 0; argv[2][i]; i++)
-		if (argv[2][i] != '0')
-		{
-			isn2 = 0;
-			break;
-		}
-
-	if (isn1 == 1 || isn2 == 1)
+	while (*s)
 	{
-		printf("0\n");
-		exit(0);
+		if (*s < '0' || *s > '9')
+			return (0);
+		s++;
+	}
+
+	return (1);
+}
+/**
+ *_strlen - returns the length of a string
+ *@s: pointer to the string
+ *
+ *Return: length of the string
+ */
+int _strlen(char *s)
+{
+	int c = 0;
+	char ch;
+
+	while ((ch = *(s + c)) != '\0')
+		c++;
+
+	return (c);
+}
+/**
+ *_mul - multiplies two positive numbers
+ *@s1: pointer to the first number stored as string of chars
+ *@len1: length of the first number
+ *@s2: length of the second number stored as string of chars
+ *@len2: length of the second number
+ *@len_mul: possible length of the multiplication
+ *
+ *Return: _mul pointer to the array where is stored the result of
+ *        multiplication
+ *	  Error 98 if something fails
+ */
+int *_mul(char *s1, int len1, char *s2, int len2, int len_mul)
+{
+	int i = 0, j = 0, k = 0, residue = 0;
+	int *res = NULL;
+	int *_mul = NULL;
+
+	_mul = malloc((unsigned int)len_mul * sizeof(int));
+	if (_mul == NULL)
+		exit(98);
+	_initialize(_mul, len_mul);
+	j = len2 - 1;
+	while (j >= 0)
+	{
+		i = len1 - 1;
+		k = len1;
+		residue = 0;
+		res = malloc(((unsigned int)len1 + 1) * sizeof(int));
+		if (res == NULL)
+			exit(98);
+		while (i >= 0)
+		{
+			res[k] = (residue + (s1[i] - '0') * (s2[j] - '0')) % 10;
+			residue = (residue + (s1[i] - '0') * (s2[j] - '0')) / 10;
+			k--;
+			i--;
+		}
+		res[k] = residue;
+		len_mul--;
+		array_sum(res, len1, _mul, len_mul);
+		j--;
+		free(res);
+	}
+	return (_mul);
+}
+/**
+ *array_sum - adds the diferent results obtained in each multiplication step
+ *@res: pointer to the result of the multiplication step
+ *@len1: length of where @res is poiting
+ *@_mul: pointer that points to the allocated space where the global result
+ *	 will be stored
+ *@len_mul: possible length of multiplication
+ *
+ *Return: void
+ */
+void array_sum(int *res, int len1, int *_mul, int len_mul)
+{
+	int i = 0, j = len_mul, residue = 0, sum = 0;
+
+	i = len1;
+	while (i >= 0)
+	{
+		sum = residue + _mul[j] + res[i];
+		_mul[j] = sum % 10;
+		residue = sum / 10;
+		i--;
+		j--;
 	}
 }
-
 /**
- * _initialize_array - set memery to zero in a new array
- * @ar: char array.
- * @lar: length of the char array.
- *
- * Return: pointer of a char array.
- */
-char *_initialize_array(char *ar, int lar)
+*_initialize - initializes an allocated memory of int with 0
+*@s: pointer to the allocated memory
+*@len: length of the allocated memory
+*
+*Return: void
+*/
+void _initialize(int *s, int len)
 {
 	int i = 0;
 
-	for (i = 0; i < lar; i++)
-		ar[i] = '0';
-	ar[lar] = '\0';
-	return (ar);
+	while (i < len)
+	{
+		s[i] = 0;
+		i++;
+	}
 }
-
 /**
- * _checknum - determines length of the number
- * and checks if number is in base 10.
- * @argv: arguments vector.
- * @n: row of the array.
- *
- * Return: length of the number.
- */
-int _checknum(char *argv[], int n)
+*print_mul - prints the result of the multiplication
+*@s: pointer to the result
+*@len: length of array where @s is pointing
+*
+*Return: void
+*/
+void print_mul(int *s, int len)
 {
-	int ln;
+	int i = 0;
 
-	for (ln = 0; argv[n][ln]; ln++)
-		if (!isdigit(argv[n][ln]))
-		{
-			printf("Error\n");
-			exit(98);
-		}
-
-	return (ln);
+	if (s[i] == 0)
+	{
+		while (s[i] == 0 && i < len)
+			i++;
+	}
+	if (i == len)
+		_putchar('0');
+	while (i < len)
+	{
+		_putchar(s[i] + '0');
+		i++;
+	}
+	_putchar('\n');
 }
-
 /**
- * main - Entry point.
- * program that multiplies two positive numbers.
- * @argc: number of arguments.
- * @argv: arguments vector.
+ *main - entry point
+ *@argc: numbers of arguments supplied to the program
+ *@argv: array of pointers to the arguments supplied to the program
  *
- * Return: 0 - success.
+ *Return: 0 sucess
+ *	  Error 98 if something fails
  */
 int main(int argc, char *argv[])
 {
-	int ln1, ln2, lnout, add, addl, i, j, k, ca;
-	char *nout;
+	int len1 = 0, len2 = 0, len_mul = 0;
+	int *mul = NULL;
 
 	if (argc != 3)
-		printf("Error\n"), exit(98);
-	ln1 = _checknum(argv, 1), ln2 = _checknum(argv, 2);
-	_is_zero(argv), lnout = ln1 + ln2, nout = malloc(lnout + 1);
-	if (nout == NULL)
-		printf("Error\n"), exit(98);
-	nout = _initialize_array(nout, lnout);
-	k = lnout - 1, i = ln1 - 1, j = ln2 - 1, ca = addl = 0;
-	for (; k >= 0; k--, i--)
 	{
-		if (i < 0)
-		{
-			if (addl > 0)
-			{
-				add = (nout[k] - '0') + addl;
-				if (add > 9)
-					nout[k - 1] = (add / 10) + '0';
-				nout[k] = (add % 10) + '0';
-			}
-			i = ln1 - 1, j--, addl = 0, ca++, k = lnout - (1 + ca);
-		}
-		if (j < 0)
-		{
-			if (nout[0] != '0')
-				break;
-			lnout--;
-			free(nout), nout = malloc(lnout + 1), nout = _initialize_array(nout, lnout);
-			k = lnout - 1, i = ln1 - 1, j = ln2 - 1, ca = addl = 0;
-		}
-		if (j >= 0)
-		{
-			add = ((argv[1][i] - '0') * (argv[2][j] - '0')) + (nout[k] - '0') + addl;
-			addl = add / 10, nout[k] = (add % 10) + '0';
-		}
+		printf("Error\n");
+		exit(98);
 	}
-	printf("%s\n", nout);
+	if (!(check_digit(argv[1])) || !(check_digit(argv[2])))
+	{
+		printf("Error\n");
+		exit(98);
+	}
+	len1 = _strlen(argv[1]);
+	len2 = _strlen(argv[2]);
+	len_mul = len1 + len2;
+	mul = _mul(argv[1], len1, argv[2], len2, len_mul);
+	print_mul(mul, len_mul);
+	free(mul);
+
 	return (0);
 }
